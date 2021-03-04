@@ -145,8 +145,8 @@ Voila, **SUCCESS** the realPassword was overwritten and the new password in memo
 ## References
 
 
-[1] https://blog.rapid7.com/2019/02/19/stack-based-buffer-overflow-attacks-what-you-need-to-know/
-[2] https://www.gnu.org/software/gdb/
-[3] https://www.rapidtables.com/code/text/ascii-table.html
-[3] https://owasp.org/www-community/vulnerabilities/Buffer_Overflow
-[4] https://www.youtube.com/watch?v=1S0aBV-Waeo
+[1]https://blog.rapid7.com/2019/02/19/stack-based-buffer-overflow-attacks-what-you-need-to-know/    
+[2]https://www.gnu.org/software/gdb/    
+[3]https://www.rapidtables.com/code/text/ascii-table.html       
+[3]https://owasp.org/www-community/vulnerabilities/Buffer_Overflow          
+[4]https://www.youtube.com/watch?v=1S0aBV-Waeo          
