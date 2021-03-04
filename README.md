@@ -124,7 +124,7 @@ Starting program: /home/vagrant/StackOverflow/code
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 SUCCESS!
 ```
-Voila, **SUCCESS** the realPassword was overwritten and the new password in memory now is equivalent to "realPassword, "ffffffff", 8"., if we check the memory again we will confirm that the following frames were dumped with "0x61616161":
+Voila, **SUCCESS** the realPassword was overwritten and the new password in memory now is equivalent to "realPassword, "aaaaaaaa", 8"., if we check the memory again we will confirm that the following frames were dumped with "0x61616161":
 
 ```bash
 (gdb) x/100x 0x7fffffffe358
@@ -139,7 +139,60 @@ Voila, **SUCCESS** the realPassword was overwritten and the new password in memo
 
 ```
 
-### To reproduce this exploit you will
+### Triggering a segmentation fault 
+
+As we could see already, there is no limits for the gets() function, what happens if we create an input with lets say  300xa? Let's see, but first let's remove the interruption in the code, this time we will create the interruption during the code runtime by providing an input that will overwrite the stack, if you understood the stack memory correctly you will notice that memory of the variable will be automatically erased and the area freed up to the give space for the new dump, our final code must be something like that:
+
+``` C
+#include <signal.h>
+#include <stdio.h>
+#include <string.h>
+int main(){
+	char realPassword[8];
+	char givenPassword[8];
+
+	strncpy(realPassword, "ffffffff", 8);
+	gets(givenPassword);
+	
+	if (0 == strncmp(givenPassword, realPassword, 8)){
+		printf("SUCCESS!\n");
+	}else{
+		printf("FAILURE!\n");
+	}
+//	raise(SIGINT); <------ remove or comment this line
+	printf("givenPassword: %s\n", givenPassword);
+    printf("realPassword: %s\n", realPassword);
+	return 0;
+}
+``` 
+
+Let's run the command again:
+
+``` bash
+# gcc -fno-stack-protector -z execstack -o code code.c
+```
+``` bash
+(gdb) run
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/vagrant/StackOverflow/code
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+```
+
+Now have have reproduced a Segmentation fault which triggered the Kernel to send the signal [SIGSEGV](https://man7.org/linux/man-pages/man7/signal.7.html)[4] interrupting the currently-executing machine instruction in order to save the state on the stack to make it possible to continue the execution later [5]. 
+
+```bash
+(gdb) x/100x 0x7fffffffe4c0
+[...]
+0x7fffffffe500:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffe510:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffe520:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffe530:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffe540:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffe550:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffe560:	0x61616161	0x61616161	0x61616161	0x61616161
+[...]
+```
 
 
 ## References
@@ -147,6 +200,8 @@ Voila, **SUCCESS** the realPassword was overwritten and the new password in memo
 
 [1]https://blog.rapid7.com/2019/02/19/stack-based-buffer-overflow-attacks-what-you-need-to-know/    
 [2]https://www.gnu.org/software/gdb/    
-[3]https://www.rapidtables.com/code/text/ascii-table.html       
-[3]https://owasp.org/www-community/vulnerabilities/Buffer_Overflow          
-[4]https://www.youtube.com/watch?v=1S0aBV-Waeo          
+[3]https://www.rapidtables.com/code/text/ascii-table.html  
+[4]https://man7.org/linux/man-pages/man7/signal.7.html     
+[5]https://unix.stackexchange.com/questions/257598/how-does-a-segmentation-fault-work-under-the-hood
+[6]https://owasp.org/www-community/vulnerabilities/Buffer_Overflow          
+[7]https://www.youtube.com/watch?v=1S0aBV-Waeo          
