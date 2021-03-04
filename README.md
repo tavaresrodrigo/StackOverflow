@@ -4,6 +4,46 @@ This repo was created to demonstrate the operation of a buffer overflow exploit,
 
 We will also impair the availability of the program generating a segmentation fault error which occurs when when a program attempts to access a memory location that it is not allowed to access, a violation in memory in most standards computers will trigger the OS kernel to perform a corrective action leading the program to be terminated, affecting the **AVAILABILITY** 
 
+# What we need to start ?
+
+If you want to reproduce this demonstration in your own desktop everything you need is install [Vagrant](https://www.vagrantup.com/) to create the box(Virtual Machine) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) to be able to deploy the vagrant box. Clone this repository in your environment and spin up the [vagrant box](https://github.com/tavaresrodrigo/StackOverflow/blob/main/Vagrantfile) by running the command below:
+
+```bash
+vagrant up
+```
+
+Check the status of the VM:
+
+```bash
+$ vagrant status
+Current machine states:
+
+stackoverflow             running (virtualbox)
+```
+
+Connect to the virtual machine via ssh:
+
+```bash
+$ vagrant ssh stackoverflow
+Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-58-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Thu 04 Mar 2021 02:51:49 PM UTC
+
+[...]
+
+```
+
+Become root:
+
+```bash
+vagrant@stackoverflow:~$ sudo su
+root@stackoverflow:/home/vagrant#
+```
+
 ## A bit of memory 
 
 Understanding stack-based overflow attacks involves at least a basic understanding of computer memory, let's review some very important concepts. 
