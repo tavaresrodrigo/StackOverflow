@@ -22,11 +22,10 @@ The heap is the memory used by programming languages to store large block of mem
 
 When the execution stack grows beyond the memory that is reserved for it, you will cause a stack overflow as the stack will eventually consume more memory than is reserved for it and eventually overwrite other buffers in the same stack. 
 
-![Broken padlock ](https://github.com/tavaresrodrigo/StackOverflow/blob/main/brokenpadlock.jpg)
 
 ## The exploit
 
-The [code] (https://github.com/tavaresrodrigo/StackOverflow/blob/main/code.c used to illustrate 
+The [code](https://github.com/tavaresrodrigo/StackOverflow/blob/main/code.c used to illustrate 
 ``` C
 #include <signal.h>
 #include <stdio.h>
