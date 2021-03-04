@@ -2,11 +2,11 @@
 
 This repo was created to demonstrate the operation of a buffer overflow exploit, we are going to change a password variable within a vulnerable program which might illustrate for example how can an attacker grant access to an assumed program which requires authentication by overwriting the current/real password in the stack memory of a C program affecting **CONFIDENTIALITY AND INTEGRITY**. 
 
-We will also impair the availability of the program generating a segmentation fault error which occurs when when a program attempts to access a memory location that it is not allowed to access, a violation in memory in most standards computers will trigger the OS kernel to perform a corrective action leading the program to be terminated, affecting the **AVAILABILITY** 
+We will also impair the availability of the program generating a segmentation fault error which occurs when when a program attempts to access a memory location that it is not allowed to access, a violation in memory in most standards computers will trigger the OS kernel to perform a corrective action leading the program to be interrupted, which might affect the **AVAILABILITY** 
 
 ## Reproducing the exploit in your workstation
 
-If you want to reproduce this demonstration in your own desktop everything you need is install [Vagrant](https://www.vagrantup.com/) to create the box(Virtual Machine) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) to be able to deploy the vagrant box. Clone this repository in your environment and spin up the [vagrant box](https://github.com/tavaresrodrigo/StackOverflow/blob/main/Vagrantfile) by running the command below, it can take some time to download the Ubuntu iso:
+If you want to reproduce this demonstration in your own desktop, you need is to install [Vagrant](https://www.vagrantup.com/) to create the box(Virtual Machine) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) to be able to deploy the vagrant box. Clone this repository in your environment and spin up the [vagrant box](https://github.com/tavaresrodrigo/StackOverflow/blob/main/Vagrantfile) by running the command below, it can take some time to download the Ubuntu ISO file:
 
 ```bash
 $ vagrant up
@@ -55,16 +55,16 @@ $ vagrant destroy stackoverflow
 
 ## A bit of memory 
 
-Understanding stack-based overflow attacks involves at least a basic understanding of computer memory, let's review some very important concepts. 
+Understanding stack-based overflow attacks requires at least an elementray knowledge of memory layout, let's review some very important concepts. 
 
 ### Stack memory: 
 
-A stack is the memory which stores variables created by a function, it's temporary, when the program is finished, the memory of the variable will be automatically erased and the area freed up, the stack is managed by the CPU – so you don’t have to allocate or deallocate memory. The stack section mostly contains methods, local variable, and reference variables. 
+Stack is the memory in which we store variables created by functions,  methods, and reference to variables, it's temporary, when the program is finished the memory will be automatically erased and the area freed up, the stack is managed by the CPU – so you don’t have to allocate or release memory manually.
 
 ![stack memory graph ](https://github.com/tavaresrodrigo/StackOverflow/blob/main/stack.png)
 ### Heap memory
 
-The heap is the memory used by programming languages to store large block of memory, it's also known as dynamic memory. Unlike the stack this area of memory is managed by the programmer in C for example, variables are allocated and freed using functions like malloc() and free().
+The heap is used by programming languages to store large block of memory, it's also known as dynamic memory. Unlike the stack the heap is managed by the programmer, in C for example, variables are allocated and freed using functions like malloc() and free().
 
 ![stack memory vs heap memory comparison ](https://github.com/tavaresrodrigo/StackOverflow/blob/main/stackvsheap.png)
 
@@ -102,17 +102,17 @@ int main(){
 
 ### gets()
 
-The function **gets()** is used to read an arbitrary amount of data into a stack buffer without limiting the amount of data read, it just reads the data and dumps it into memory, basically this function does not matches the size of the data read with the size of the buffer, in our case **8**, which means we can pass any value to the buffer and it will be written into the stack memory.
+The function **gets()** is used to read an arbitrary amount of data into a stack buffer without limiting the amount of data to read, it just reads the data and dumps it into memory, this function does not matches the size of the data read with the size of the buffer, in our case **8**, which means we can pass any value to the buffer and it will be written into the stack memory.
 
 ### Compiling the code
 
-For years attackers have been exploiting vulnerabilities in the stack memory, so it's expected that the compilers have developed mechanisms to protect the program execution against these attacks, for this this reason we will disable them in order to be able to reproduce the segmentation fault, in order to compile the program you should use the parameters below:
+For years attackers have been exploiting vulnerabilities in the stack memory, so it's expected the compilers have developed mechanisms to protect the program execution against these attacks, for this reason we will disable them in order to be able to reproduce the segmentation fault, in order to compile the program you should use the parameters below:
 
 ``` bash
 # gcc -fno-stack-protector -z execstack -o code code.c
 ```
 
-Do you remember the gets() ? Look at the compiler alert **"the `gets' function is dangerous and should not be used."**:
+Look at the compiler alert **"the `gets' function is dangerous and should not be used."**:
 
 ```bash
 code.c: In function ‘main’:
@@ -125,7 +125,7 @@ code.c:(.text+0x2a): warning: the `gets' function is dangerous and should not be
 ```
 ### Running the code
 
-As you might have noticed, the [programmer](https://blog.rapid7.com/2019/02/19/stack-based-buffer-overflow-attacks-what-you-need-to-know/)[1] had configured a **SIGINT** in the code that allows us to use the debugger[2] to dive deep in the stack frames and confirm what is happening at the memory level, let's run the program and pass "aaaaaaaaaaaaaaaa" 16xa which will dump 4 frames in the stack as we can see below: 
+The [programmer](https://blog.rapid7.com/2019/02/19/stack-based-buffer-overflow-attacks-what-you-need-to-know/)[1] had configured a **SIGINT** in the code that allows us to use the debugger[2] to dive deep in the stack frames and confirm what is happening at the memory level, let's run the program and pass "aaaaaaaa" 8xa which will dump 2 frames in the stack as we can see below: 
 
 ```bash
 (gdb) run
@@ -155,7 +155,7 @@ We already know from where to start the search so let's show at least 100 frames
 [...]
 0x7fffffffe468:	0x6b453000	0x0ddcad0a	0x00000000	0x00000000
 0x7fffffffe478:	0x55555237	0x00005555	0x61616161	0x61616161
-0x7fffffffe488:	0x61616161	0x61616161	0xf7fc0f00	0x00007fff
+0x7fffffffe488:	0xf7fc0f00	0x00007fff	0xf7fc0f00	0x00007fff
 0x7fffffffe498:	0x55555270	0x00005555	0x66666666	0x66666666
 0x7fffffffe4a8:	0x555550e0	0x00005555	0xffffe5b0	0x00007fff
 [...]
@@ -163,7 +163,7 @@ We already know from where to start the search so let's show at least 100 frames
 
 ### Overwriting the program variable in the stack
 
-In [ASCII](https://www.rapidtables.com/code/text/ascii-table.html) [3] "a" is 61 as "f" is 66, so as we could see the 4 frames filled up with our input, and most importantly, we noticed there are only 4 frames (16K) between the area of memory which is storing the realPassword "0x66666666", what happens if we store 52xa (12+1 frames) running our program one more time ?
+In [ASCII](https://www.rapidtables.com/code/text/ascii-table.html) [3] "a" is 61 and "f" is 66, so as we could see the 2 frames filled up with our input, and most importantly, we noticed there are only 4 frames (16K) between the area of memory which is storing the realPassword "0x66666666", what happens if we store 52xa (12+1 frames) running our program one more time ?
 
 ```bash
 (gdb) run
@@ -173,7 +173,7 @@ Starting program: /home/vagrant/StackOverflow/code
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 SUCCESS!
 ```
-Voila, **SUCCESS** the realPassword was overwritten and the new password in memory now is equivalent to "realPassword, "aaaaaaaa", 8"., if we check the memory again we will confirm that the following frames were dumped with "0x61616161":
+Voila, **SUCCESS** the realPassword has been overwritten and the new password in memory now is equivalent to "realPassword, "aaaaaaaa", 8"., if we check the memory again we will confirm that the following frames were dumped with "0x61616161":
 
 ```bash
 (gdb) x/100x 0x7fffffffe358
@@ -228,7 +228,7 @@ Starting program: /home/vagrant/StackOverflow/code
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 ```
 
-Now have have reproduced a Segmentation fault which triggered the Kernel to send the signal [SIGSEGV](https://man7.org/linux/man-pages/man7/signal.7.html)[4] interrupting the currently-executing machine instruction in order to save the state on the stack to make it possible to continue the execution later [5]. 
+Now have have reproduced a Segmentation fault which triggered the Kernel to send the signal [SIGSEGV](https://man7.org/linux/man-pages/man7/signal.7.html)[4] interrupting the currently-executing machine instruction trying to save the state on the stack to make it possible to continue the execution later [5]. 
 
 ```bash
 (gdb) x/100x 0x7fffffffe4c0
