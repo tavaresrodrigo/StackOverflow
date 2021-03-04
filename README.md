@@ -4,7 +4,7 @@ This repo was created to demonstrate the operation of a buffer overflow exploit,
 
 We will also impair the availability of the program generating a segmentation fault error which occurs when when a program attempts to access a memory location that it is not allowed to access, a violation in memory in most standards computers will trigger the OS kernel to perform a corrective action leading the program to be terminated, affecting the **AVAILABILITY** 
 
-## Understanding the underling concepts 
+## A bit of memory 
 
 Understanding stack-based overflow attacks involves at least a basic understanding of computer memory, let's review some very important concepts. 
 
@@ -12,21 +12,21 @@ Understanding stack-based overflow attacks involves at least a basic understandi
 
 A stack is the memory which stores variables created by a function, it's temporary, when the program is finished, the memory of the variable will be automatically erased and the area freed up, the stack is managed by the CPU – so you don’t have to allocate or deallocate memory. The stack section mostly contains methods, local variable, and reference variables. 
 
-[! stack memory graph ](https://github.com/tavaresrodrigo/StackOverflow/stack.png)
+![stack memory graph ](https://github.com/tavaresrodrigo/StackOverflow/blob/main/stack.png)
 ### Heap memory
 
 The heap is the memory used by programming languages to store large block of memory, it's also known as dynamic memory. Unlike the stack this area of memory is managed by the programmer in C for example, variables are allocated and freed using functions like malloc() and free()
 
-[! stack memory vs heap memory comparison ](https://github.com/tavaresrodrigo/StackOverflow/stackvsheap.png)
+![stack memory vs heap memory comparison ](https://github.com/tavaresrodrigo/StackOverflow/blob/main/stackvsheap.png)
 ## What is stack overflow exploit?
 
 When the execution stack grows beyond the memory that is reserved for it, you will cause a stack overflow as the stack will eventually consume more memory than is reserved for it and eventually overwrite other buffers in the same stack. 
 
-[! Broken padlock ](https://github.com/tavaresrodrigo/StackOverflow/brokenpadlock.jpg)
+![Broken padlock ](https://github.com/tavaresrodrigo/StackOverflow/blob/main/brokenpadlock.jpg)
 
 ## The exploit
 
-The [code] (https://github.com/tavaresrodrigo/StackOverflow/code.c) used to illustrate 
+The [code] (https://github.com/tavaresrodrigo/StackOverflow/blob/main/code.c used to illustrate 
 ``` C
 #include <signal.h>
 #include <stdio.h>
