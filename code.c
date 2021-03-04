@@ -2,18 +2,19 @@
 #include <stdio.h>
 #include <string.h>
 int main(){
-	char realPassword[20];
-	char givenPassword[20];
+	char realPassword[8];
+	char givenPassword[8];
 
-	strncpy(realPassword, "ddddddddddddddd", 20);
+	strncpy(realPassword, "ffffffff", 8);
 	gets(givenPassword);
 	
-	if (0 == strncmp(givenPassword, realPassword, 20)){
+	if (0 == strncmp(givenPassword, realPassword, 8)){
 		printf("SUCCESS!\n");
 	}else{
 		printf("FAILURE!\n");
 	}
 	raise(SIGINT);
 	printf("givenPassword: %s\n", givenPassword);
+    printf("realPassword: %s\n", realPassword);
 	return 0;
 }
