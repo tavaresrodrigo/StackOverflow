@@ -9,7 +9,7 @@ We will also impair the availability of the program generating a segmentation fa
 If you want to reproduce this demonstration in your own desktop everything you need is install [Vagrant](https://www.vagrantup.com/) to create the box(Virtual Machine) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) to be able to deploy the vagrant box. Clone this repository in your environment and spin up the [vagrant box](https://github.com/tavaresrodrigo/StackOverflow/blob/main/Vagrantfile) by running the command below:
 
 ```bash
-vagrant up
+$ vagrant up
 ```
 
 Check the status of the VM:
