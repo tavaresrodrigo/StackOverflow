@@ -6,7 +6,7 @@ We will also impair the availability of the program generating a segmentation fa
 
 # What we need to start ?
 
-If you want to reproduce this demonstration in your own desktop everything you need is install [Vagrant](https://www.vagrantup.com/) to create the box(Virtual Machine) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) to be able to deploy the vagrant box. Clone this repository in your environment and spin up the [vagrant box](https://github.com/tavaresrodrigo/StackOverflow/blob/main/Vagrantfile) by running the command below:
+If you want to reproduce this demonstration in your own desktop everything you need is install [Vagrant](https://www.vagrantup.com/) to create the box(Virtual Machine) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) to be able to deploy the vagrant box. Clone this repository in your environment and spin up the [vagrant box](https://github.com/tavaresrodrigo/StackOverflow/blob/main/Vagrantfile) by running the command below, it can take some time to download the Ubuntu iso:
 
 ```bash
 $ vagrant up
@@ -42,6 +42,15 @@ Become root:
 ```bash
 vagrant@stackoverflow:~$ sudo su
 root@stackoverflow:/home/vagrant#
+```
+
+After you have finished with this laboratory you can destroy your virtual machine by running:
+
+```bash
+$ vagrant destroy stackoverflow
+    stackoverflow: Are you sure you want to destroy the 'stackoverflow' VM? [y/N] y
+==> stackoverflow: Forcing shutdown of VM...
+==> stackoverflow: Destroying VM and associated drives...
 ```
 
 ## A bit of memory 
