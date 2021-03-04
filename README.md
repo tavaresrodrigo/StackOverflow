@@ -25,7 +25,8 @@ When the execution stack grows beyond the memory that is reserved for it, you wi
 
 ## The exploit
 
-The [code](https://github.com/tavaresrodrigo/StackOverflow/blob/main/code.c used to illustrate 
+The [code](https://github.com/tavaresrodrigo/StackOverflow/blob/main/code.c) used to illustrate the exploit has a number of security red flags.
+
 ``` C
 #include <signal.h>
 #include <stdio.h>
@@ -48,6 +49,12 @@ int main(){
 	return 0;
 }
 ``` 
+
+### gets()
+
+The function **gets()** is used to read an arbitrary amount of data into a stack buffer without limiting the amount of data read, it just reads the data and dumps it into memory, basically this function does not matches the size of the data read with the size of the buffer, in our case **8**, which means we can pass any value to the buffer and it will be written into the stack memory.
+
+### To reproduce this exploit you will
 
 
 ## References
