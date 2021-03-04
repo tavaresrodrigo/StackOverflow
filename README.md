@@ -83,11 +83,6 @@ As you might have noticed, the [programmer](https://blog.rapid7.com/2019/02/19/s
 Starting program: /home/vagrant/StackOverflow/code
 aaaaaaaaaaaaaaaa
 FAILURE!
-
-Program received signal SIGINT, Interrupt.
-__GI_raise (sig=<optimized out>) at ../sysdeps/unix/sysv/linux/raise.c:50
-50	../sysdeps/unix/sysv/linux/raise.c: No such file or directory.
-
 ```
 
 Now let's check the area of memory where our 16x was stored, first we need to check where exactly the stack memory is :
@@ -115,6 +110,7 @@ We already know from where to start the search so let's show at least 100 frames
 0x7fffffffe498:	0x55555270	0x00005555	0x66666666	0x66666666
 0x7fffffffe4a8:	0x555550e0	0x00005555	0xffffe5b0	0x00007fff
 [...]
+```
 
 ### Overwriting the program variable in the stack
 
@@ -141,7 +137,7 @@ Voila, **SUCCESS** the realPassword was overwritten and the new password in memo
 0x7fffffffe4b8:	0x00000000	0x00000000	0x00000000	0x00000000
 [...]
 
-
+```
 
 ### To reproduce this exploit you will
 
