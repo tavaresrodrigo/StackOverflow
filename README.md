@@ -1,5 +1,11 @@
 # Reproducing an Stack Based Buffer Overflow exploit
 
+By Rodrigo Tavares. 
+
+[![Linkedin](https://i.stack.imgur.com/gVE0j.png) LinkedIn](https://www.linkedin.com/tavaresrodrigo)
+&nbsp;
+[![GitHub](https://i.stack.imgur.com/tskMh.png) GitHub](https://github.com/tavaresrodrigo)
+
 ## Introduction
 
 A buffer overflow occurs when a program overruns adjacent memory locations of a given running program leading the system behavior to erros, chrashes or incorrect result.
