@@ -1,10 +1,14 @@
-# Stack Overflow
+# Reproducing an Stack Based Buffer Overflow exploit
 
-This repo was created to demonstrate the operation of a buffer overflow exploit, we are going to change a password variable within a vulnerable program which might illustrate for example how can an attacker grant access to an assumed program which requires authentication by overwriting the current/real password in the stack memory of a C program affecting **CONFIDENTIALITY AND INTEGRITY**. 
+## Introduction
 
-We will also impair the availability of the program generating a segmentation fault error which occurs when when a program attempts to access a memory location that it is not allowed to access, a violation in memory in most standards computers will trigger the OS kernel to perform a corrective action leading the program to be interrupted, which might affect the **AVAILABILITY** 
+A buffer overflow occurs when a program overruns adjacent memory locations of a given running program leading the system behavior to erros, chrashes or incorrect result.
 
-## Reproducing the exploit in your workstation
+In this guide, I will demonstrate the operation of a buffer overflow exploit, we are going to change a password variable within a vulnerable program illustrating how can an attacker gain access to an assumed secure program by overwriting the current/real password in the stack memory of a C program, and finally we will also see how it affects the **CONFIDENTIALITY AND INTEGRITY** of the system. 
+
+We will impair the availability of the program generating a segmentation fault error which occurs when a program attempts to access an ilegal memory location, a violation in memory in most standards computers will trigger the OS kernel to perform a corrective action leading the program to be interrupted, which might affect the **AVAILABILITY** 
+
+## Reproducing the exploit in your environment 
 
 If you want to reproduce this demonstration in your own desktop, you need is to install [Vagrant](https://www.vagrantup.com/) to create the box(Virtual Machine) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) to be able to deploy the vagrant box. Clone this repository in your environment and spin up the [vagrant box](https://github.com/tavaresrodrigo/StackOverflow/blob/main/Vagrantfile) by running the command below, it can take some time to download the Ubuntu ISO file:
 
@@ -243,6 +247,13 @@ Now have have reproduced a Segmentation fault which triggered the Kernel to send
 [...]
 ```
 
+## Conclusion
+
+In this tutorial 
+
+For improved security,
+
+Check also,
 
 ## References
 
