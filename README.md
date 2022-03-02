@@ -255,11 +255,8 @@ Now have have reproduced a Segmentation fault which triggered the Kernel to send
 
 ## Conclusion
 
-In this tutorial 
-
-For improved security,
-
-Check also,
+According to the State of Kubernetes Security Report spring 2021, nearly everyone—94% of respondents admitted to
+experiencing a container security incident in the last 12 months. Containers had become the got o market model for new organizations, and is leterally eating the deployment word. A container security strategy should be the concern number 1 of any responsible organization, there are many ways a container can be exploited and this example approached above is just one in a sea of threats, we should be taking container security seriously. 
 
 ## References
 
